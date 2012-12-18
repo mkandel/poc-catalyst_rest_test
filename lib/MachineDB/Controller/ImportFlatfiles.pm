@@ -86,15 +86,9 @@ my %column_for_field = (
     'veritasClusterRole'         => 'veritas_cluster_role',
 );
 
-sub index :Path :Args(0) {
-    my ( $self, $c ) = @_;
-
-    $c->response->body('Matched MachineDB::Controller::ImportFlatfiles in ImportFlatfiles.');
-}
-
 sub import_flatfiles {
     my ( $self, $c ) = @_;
-    my $success = 0;
+    my $success = 1;
 
     use Data::Dumper;
     use Sys::Hostname;
@@ -106,13 +100,18 @@ sub import_flatfiles {
         return;
     }
 
-    my $dir = '/home/mkandel/ariba/services/operations/machinedb';
-    my @files = File::Find::Rule->file()->in( $dir );
+    my $dir    = '/home/mkandel/ariba/services/operations/machinedb';
+    my @files  = File::Find::Rule->file()->in( $dir );
+
+    ## Not sure why/what/how to get this to work ...
+    #my $prefix = 'machine.';
+    my $prefix = '';
+    my $field  = 'hostname';
 
     FILE:
     foreach my $file ( @files ){
         open my $IN, '<', $file or die "Couldn't open '$file' for read: $!\n";
-        my %new;
+        my $new;
 #        print STDERR "** Processing '$file' ... **\n";
         while ( my $line = <$IN> ){
             next if $line =~ m/^\s*$/; ## Ignore blank lines
@@ -122,7 +121,7 @@ sub import_flatfiles {
             $val =~ s/\s*//g if $val;   ## Remove whitespace
 #            print STDERR "\t** '$field': '$val' **\n";
             if ( $column_for_field{ $field } ){
-                $new{ "machine.$column_for_field{ $field }" } = $val;
+                $new->{ "$prefix$column_for_field{ $field }" } = $val;
             }
         }
         close $IN or die "Error closing '$file' after read: $!\n";
@@ -130,11 +129,26 @@ sub import_flatfiles {
         #my $stuff = $dumper->dump();
         #print STDERR $stuff;
         #print Dumper \%new;
-        next FILE unless $new{ 'machine.hostname' };
-        if ( $new{ '' } ){
-            print STDERR "** Creating DB entry for '$new{ 'machine.hostname' }' **\n";
-            my $result = $c->model( 'DB::Machine' )->create( \%new );
+
+        ## alert about any files that don't have a hostname
+        unless ( $new->{ "$prefix$field" } ){
+            print STDERR "*** '$file' has no hostname!!! ***\n";
+            next FILE;
         }
+
+        print STDERR "## Creating DB entry for '", $new->{ "$prefix$field" }, "' ##\n";
+        ## This is dying, lets's ignore that :-)
+        my $result;
+        #my $result = $c->model( 'DB::Machine' )->create( $new );
+        eval{
+            $result = $c->model( 'DB::Machine' )->create( $new );
+        };
+        if ( $@ ){
+            print STDERR "## inserting '", $new->{ "$prefix$field" }, "' failed ##: $@\n################\n";
+        }
+
+        ## Not sure what I'm getting back but this should be OK?? ...
+        if ( !$result ){ $success = 0; }
     }
 
     if ( $success ){

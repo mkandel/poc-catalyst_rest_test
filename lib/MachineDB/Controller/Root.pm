@@ -62,9 +62,10 @@ List out all MachineDB hosts
 sub list :Local {
     my ( $self, $c ) = @_;
 
-    $c->stash( hosts => [$c->model('DB::Machine')->all]);
+    $c->stash( hosts => [$c->model('DB::Machine')->all] );
+    $c->stash( num_entries => $c->model('DB::Machine')->count );
 
-    $c->stash(template => 'src/machines/list.tt');
+    $c->stash(template => 'src/machines/list.tt' );
 }
 
 =head2 import_flatfiles
