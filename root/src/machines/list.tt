@@ -1,0 +1,21 @@
+[% # This is a TT comment. -%]
+ 
+[%- # Provide a title -%]
+[% META title = 'Host List' -%]
+ 
+[% # Note That the '-' at the beginning or end of TT code  -%]
+[% # "chomps" the whitespace/newline at that end of the    -%]
+[% # output (use View Source in browser to see the effect) -%]
+ 
+[% # Some basic HTML with a loop to display hosts -%]
+<table>
+<tr><th>Host</th><th>Datacenter</th></tr>
+[% # Display each host in a table row %]
+[% FOREACH host IN hosts -%]
+  <tr>
+    <td>[% host.hostname %]</td>
+    <td>[% host.datacenter %]</td>
+    <td></td>
+  </tr>
+[% END -%]
+</table>
