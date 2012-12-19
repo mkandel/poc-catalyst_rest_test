@@ -95,6 +95,12 @@ sub import_flatfiles {
     use File::Find::Rule;
     my $host = hostname;
 
+    ## Hand rolling a file logger for very specific reasons:
+    my $logfile = '/var/log/machinedb/import.log';
+    open my $LOG, '>>', $logfile or die "Couldn't open '$logfile' for write: $!\n";
+    print $LOG "#######################################################################\n";
+    print $LOG "Import run starting\n";
+
     unless ( $host =~ m/^mkandel-rh/ ){
         $c->response->body( 'Called import_flatfiles on non-development machine, ignoring!!' );
         return;
@@ -114,7 +120,7 @@ sub import_flatfiles {
     foreach my $file ( @files ){
         open my $IN, '<', $file or die "Couldn't open '$file' for read: $!\n";
         my $new;
-#        print STDERR "** Processing '$file' ... **\n";
+#        print $LOG "** Processing '$file' ... **\n";
         LINE:
         while ( my $line = <$IN> ){
             next LINE if $line =~ m/^\s*$/; ## Ignore blank lines
@@ -123,7 +129,7 @@ sub import_flatfiles {
             my ( $field, $val ) = split /:/, $line;
             chomp $val if $val;
             $val =~ s/\s*//g if $val;   ## Remove whitespace
-#            print STDERR "\t** '$field': '$val' **\n";
+#            print $LOG "\t** '$field': '$val' **\n";
             if ( $column_for_field{ $field } ){
                 $new->{ "$prefix$column_for_field{ $field }" } = $val;
             } else {
@@ -133,17 +139,17 @@ sub import_flatfiles {
         close $IN or die "Error closing '$file' after read: $!\n";
         #my $dumper = Data::Dumper->new( \%new );
         #my $stuff = $dumper->dump();
-        #print STDERR $stuff;
+        #print $LOG $stuff;
         #print Dumper \%new;
 
         ## alert about any files that don't have a hostname
         unless ( $new->{ "$prefix$field" } ){
-            print STDERR "*** '$file' has no hostname!!! ***\n";
+            print $LOG "*** '$file' has no hostname!!! ***\n";
             $log->debug( "*** '$file' has no hostname!!! ***" );
             next FILE;
         }
 
-        print STDERR "## Creating DB entry for '", $new->{ "$prefix$field" }, "' ##\n";
+        print $LOG "Creating DB entry for '", $new->{ "$prefix$field" }, "'\n";
         ## This is dying, lets's ignore that :-)
         my $result;
         #my $result = $c->model( 'DB::Machine' )->create( $new );
@@ -151,8 +157,8 @@ sub import_flatfiles {
             $result = $c->model( 'DB::Machine' )->create( $new );
         };
         if ( $@ ){
-            print STDERR "## inserting '", $new->{ "$prefix$field" }, "' failed ##: $@\n################\n";
-            $log->debug( "## inserting '", $new->{ "$prefix$field" }, "' failed ##: $@\n################" );
+            print $LOG "** inserting '", $new->{ "$prefix$field" }, "' failed **:\n\t$@\n";
+            $log->debug( "** inserting '", $new->{ "$prefix$field" }, "' failed **:\n\t$@\n";
         }
 
         ## Not sure what I'm getting back but this should be OK?? ...
@@ -164,6 +170,7 @@ sub import_flatfiles {
     } else {
         $c->response->body( 'Import failed!' );
     }
+    close $LOG or die "Error closing '$logfile' after write: $!\n';
 }
 
 =head1 AUTHOR

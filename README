@@ -1,1 +1,9 @@
-Run script/machinedb_server.pl to test the application.
+Testing creating a REST API using catalyst
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2012, Marc
+
+This code is released as Apathyware:
+
+"The code doesn't care what you do with it, and neither do I."
