@@ -304,6 +304,77 @@ __PACKAGE__->table("machine");
   is_nullable: 1
   size: 45
 
+=head2 snmp_vers
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 45
+
+=head2 mon_datacenter
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 45
+
+=head2 use_ssh
+
+  data_type: 'integer'
+  is_nullable: 1
+
+=head2 ip_addr_ternary
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 45
+
+=head2 ip_addr_standby_inside
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 45
+
+=head2 snmp_community
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 45
+
+=head2 ether_channel_1_ports
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 45
+
+=head2 ilo_ap_license
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 45
+
+=head2 ether_channel_2_ports
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 45
+
+=head2 console_ip_addr
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 45
+
+=head2 ip_addr_quadrary
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 45
+
+=head2 veritas_cluster_role
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 45
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -406,6 +477,30 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 1, size => 45 },
   "status",
   { data_type => "varchar", is_nullable => 1, size => 45 },
+  "snmp_vers",
+  { data_type => "varchar", is_nullable => 1, size => 45 },
+  "mon_datacenter",
+  { data_type => "varchar", is_nullable => 1, size => 45 },
+  "use_ssh",
+  { data_type => "integer", is_nullable => 1 },
+  "ip_addr_ternary",
+  { data_type => "varchar", is_nullable => 1, size => 45 },
+  "ip_addr_standby_inside",
+  { data_type => "varchar", is_nullable => 1, size => 45 },
+  "snmp_community",
+  { data_type => "varchar", is_nullable => 1, size => 45 },
+  "ether_channel_1_ports",
+  { data_type => "varchar", is_nullable => 1, size => 45 },
+  "ilo_ap_license",
+  { data_type => "varchar", is_nullable => 1, size => 45 },
+  "ether_channel_2_ports",
+  { data_type => "varchar", is_nullable => 1, size => 45 },
+  "console_ip_addr",
+  { data_type => "varchar", is_nullable => 1, size => 45 },
+  "ip_addr_quadrary",
+  { data_type => "varchar", is_nullable => 1, size => 45 },
+  "veritas_cluster_role",
+  { data_type => "varchar", is_nullable => 1, size => 45 },
 );
 
 =head1 PRIMARY KEY
@@ -420,9 +515,23 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
+=head1 UNIQUE CONSTRAINTS
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2012-12-14 14:18:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:y2YLWK+y70oI+XllYi6TVw
+=head2 C<hostname_UNIQUE>
+
+=over 4
+
+=item * L</hostname>
+
+=back
+
+=cut
+
+__PACKAGE__->add_unique_constraint("hostname_UNIQUE", ["hostname"]);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2012-12-19 13:51:26
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gg1YvHIzr85nf2M1Tld4bA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
