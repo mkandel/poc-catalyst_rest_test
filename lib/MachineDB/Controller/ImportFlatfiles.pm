@@ -100,6 +100,8 @@ sub import_flatfiles {
         return;
     }
 
+    my $log = $c->log;
+
     my $dir    = '/home/mkandel/ariba/services/operations/machinedb';
     my @files  = File::Find::Rule->file()->in( $dir );
 
@@ -113,15 +115,19 @@ sub import_flatfiles {
         open my $IN, '<', $file or die "Couldn't open '$file' for read: $!\n";
         my $new;
 #        print STDERR "** Processing '$file' ... **\n";
+        LINE:
         while ( my $line = <$IN> ){
-            next if $line =~ m/^\s*$/; ## Ignore blank lines
-            next if $line =~ m/^#$/;   ## Ignore comments?
+            next LINE if $line =~ m/^\s*$/; ## Ignore blank lines
+            next LINE if $line =~ m/^#$/;   ## Ignore comments?
+            next LINE unless $column_for_field{ $field };
             my ( $field, $val ) = split /:/, $line;
             chomp $val if $val;
             $val =~ s/\s*//g if $val;   ## Remove whitespace
 #            print STDERR "\t** '$field': '$val' **\n";
             if ( $column_for_field{ $field } ){
                 $new->{ "$prefix$column_for_field{ $field }" } = $val;
+            } else {
+                $log->debug( "*** '$field' has no entry in mapping!!! ***" );
             }
         }
         close $IN or die "Error closing '$file' after read: $!\n";
@@ -133,6 +139,7 @@ sub import_flatfiles {
         ## alert about any files that don't have a hostname
         unless ( $new->{ "$prefix$field" } ){
             print STDERR "*** '$file' has no hostname!!! ***\n";
+            $log->debug( "*** '$file' has no hostname!!! ***" );
             next FILE;
         }
 
@@ -145,10 +152,11 @@ sub import_flatfiles {
         };
         if ( $@ ){
             print STDERR "## inserting '", $new->{ "$prefix$field" }, "' failed ##: $@\n################\n";
+            $log->debug( "## inserting '", $new->{ "$prefix$field" }, "' failed ##: $@\n################" );
         }
 
         ## Not sure what I'm getting back but this should be OK?? ...
-        if ( !$result ){ $success = 0; }
+        #if ( !$result ){ $success = 0; }
     }
 
     if ( $success ){

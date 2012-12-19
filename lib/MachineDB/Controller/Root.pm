@@ -65,6 +65,9 @@ sub list :Local {
     $c->stash( hosts => [$c->model('DB::Machine')->all] );
     $c->stash( num_entries => $c->model('DB::Machine')->count );
 
+    my $log = $c->log;
+    $log->debug( "Entered /list/ handler" );
+
     $c->stash(template => 'src/machines/list.tt' );
 }
 
