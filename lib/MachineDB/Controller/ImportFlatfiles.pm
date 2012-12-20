@@ -101,15 +101,21 @@ sub import_flatfiles {
     print $LOG "#######################################################################\n";
     print $LOG "Import run starting\n";
 
-    unless ( $host =~ m/^mkandel-rh/ ){
+    unless ( $host =~ m/^mkandel-/ ){
         $c->response->body( 'Called import_flatfiles on non-development machine, ignoring!!' );
         return;
     }
 
     my $log = $c->log;
 
-    my $dir    = '/home/mkandel/ariba/services/operations/machinedb';
+    my $dir;
+    if ( $host =~ m/mkandel-rh/ ){
+        $dir    = '/home/mkandel/ariba/services/operations/machinedb';
+    } else { ## mkandel-mac
+        $dir    = '/Users/mkandel/ariba/services/operations/machinedb';
+    }
     my @files  = File::Find::Rule->file()->in( $dir );
+    print $LOG "File::Find::Rule found ", scalar @files, " machinedb files\n";
 
     ## Not sure why/what/how to get this to work ...
     #my $prefix = 'machine.';

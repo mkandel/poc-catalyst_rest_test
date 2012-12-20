@@ -3,11 +3,22 @@ package MachineDB::Model::DB;
 use strict;
 use base 'Catalyst::Model::DBIC::Schema';
 
+use Sys::Hostname;
+
+my $host = hostname;
+my $mysql_host;
+
+if ( $host =~ m/mkandel-rh/ ){
+    $mysql_host = 'mkandel-rh.ariba.com';
+} else { ## mkandel-mac
+    $mysql_host = 'mkandel-mac.ariba.com';
+}
+
 __PACKAGE__->config(
     schema_class => 'MachineDB::Schema',
     
     connect_info => {
-        dsn      => 'dbi:mysql:machinedb:mkandel-rh.ariba.com',
+        dsn      => "dbi:mysql:machinedb:$mysql_host",
         user     => 'machinedb',
         password => 'ariba4sure',
     }
