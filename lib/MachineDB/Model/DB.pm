@@ -18,8 +18,8 @@ __PACKAGE__->config(
     schema_class => 'MachineDB::Schema',
     
     connect_info => {
-        dsn      => "dbi:mysql:machinedb:$mysql_host",
-        user     => 'machinedb',
+        dsn => 'dbi:mysql:machinedb:mkandel-rh.ariba.com',
+        user => 'machinedb',
         password => 'ariba4sure',
     }
 );
@@ -42,7 +42,7 @@ Catalyst::Helper::Model::DBIC::Schema - 0.6
 
 =head1 AUTHOR
 
-marc kandel, 011658
+Marc Kandel
 
 =head1 LICENSE
 

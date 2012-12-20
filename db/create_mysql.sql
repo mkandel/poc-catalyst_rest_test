@@ -71,6 +71,7 @@ CREATE  TABLE IF NOT EXISTS `machinedb`.`machine` (
   `console_ip_addr` VARCHAR(45) NULL ,
   `ip_addr_quadrary` VARCHAR(45) NULL ,
   `veritas_cluster_role` VARCHAR(45) NULL ,
+  `switch_3_port` VARCHAR(45) NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
 

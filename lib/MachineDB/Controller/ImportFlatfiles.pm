@@ -26,6 +26,7 @@ Catalyst Controller.
 ## Data structure mapping flatfile fields to DB columns
 my %column_for_field = (
     'assetTag'                   => 'asset_tag',
+    'AssetTag'                   => 'asset_tag',
     'cageNumber'                 => 'cage_num',
     'consoleServer'              => 'console_server',
     'comments'                   => 'comments',
@@ -80,8 +81,8 @@ my %column_for_field = (
     'monitoringDatacenter'       => 'mon_datacenter',
     'service'                    => 'service',
     'useSsh'                     => 'use_ssh',
-    'etherChannel1Ports'         => 'ether_ehannel_1_ports',
-    'etherChannel2Ports'         => 'ether_ehannel_2_ports',
+    'etherChannel1Ports'         => 'ether_channel_1_ports',
+    'etherChannel2Ports'         => 'ether_channel_2_ports',
     'iloAPLicense'               => 'ilo_ap_license',
     'veritasClusterRole'         => 'veritas_cluster_role',
 );
@@ -139,7 +140,7 @@ sub import_flatfiles {
             if ( $column_for_field{ $field } ){
                 $new->{ "$prefix$column_for_field{ $field }" } = $val;
             } else {
-                 print $LOG "*** '$field' has no entry in mapping!!! ***";
+                 print $LOG "*** '$field' has no entry in mapping!!! ***\n";
 #                $log->debug( "*** '$field' has no entry in mapping!!! ***" );
             }
         }
