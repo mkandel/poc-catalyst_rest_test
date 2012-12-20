@@ -18,7 +18,7 @@ __PACKAGE__->config(
     schema_class => 'MachineDB::Schema',
     
     connect_info => {
-        dsn => 'dbi:mysql:machinedb:mkandel-rh.ariba.com',
+        dsn => "dbi:mysql:machinedb:$mysql_host",
         user => 'machinedb',
         password => 'ariba4sure',
     }
