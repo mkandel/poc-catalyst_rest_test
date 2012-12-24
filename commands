@@ -1,0 +1,8 @@
+catalyst.pl MachineDB
+./script/machinedb_create.pl model DB DBIC::Schema MachineDB::Schema create=static dbi:mysql:machinedb:mkandel-rh.ariba.com 'machinedb' 'ariba4sure'
+./script/machinedb_create.pl view HTML TT
+./script/machinedb_create.pl controller REST
+./script/machinedb_create.pl controller REST Catalyst::Controller::REST
+./script/machinedb_create.pl controller API::REST DBIC::API::REST MachineDB::Schema MachineDB::Model::DB
+./script/machinedb_create.pl controller ImportFlatfiles
+./script/machinedb_create.pl model DB DBIC::Schema MachineDB::Schema create=static dbi:mysql:machinedb:mkandel-rh.ariba.com 'machinedb' 'ariba4sure'
