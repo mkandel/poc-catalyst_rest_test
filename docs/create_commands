@@ -1,0 +1,8 @@
+13688  ./script/machinedb_create.pl model DB DBIC::Schema MachineDB::Schema create=static dbi:mysql:machinedb:mkandel-rh.ariba.com 'machinedb' 'ariba4sure'
+13782  h | grep -b1 _create
+13788  ./script/machinedb_create.pl model DB DBIC::Schema MachineDB::Schema create=static dbi:mysql:machinedb:mkandel-mac.ariba.com 'machinedb' 'ariba4sure'
+13789  ./script/machinedb_create.pl model DB DBIC::Schema MachineDB::Schema create=static dbi:mysql:machinedb:localhost 'machinedb' 'ariba4sure'
+13790  ./script/machinedb_create.pl controller API::REST DBIC::API::REST MachineDB::Schema MachineDB::Model::DB
+13796  grep -r record_created lib/
+13802  h | grep _create
+13803  h | grep _create > docs/create_commands
