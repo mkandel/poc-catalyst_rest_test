@@ -14,10 +14,12 @@ DROP TABLE IF EXISTS `machinedb`.`machine` ;
 
 SHOW WARNINGS;
 CREATE  TABLE IF NOT EXISTS `machinedb`.`machine` (
-  `id` INT NOT NULL AUTO_INCREMENT COMMENT '                    ' ,
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT '					' ,
   `hostname` VARCHAR(45) NOT NULL ,
   `datacenter` VARCHAR(45) NOT NULL ,
   `ip_addr` VARCHAR(45) NOT NULL ,
+  `record_created` DATETIME NOT NULL ,
+  `last_updated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   `service` VARCHAR(45) NULL ,
   `product` VARCHAR(45) NULL ,
   `asset_tag` VARCHAR(45) NULL ,
@@ -34,7 +36,6 @@ CREATE  TABLE IF NOT EXISTS `machinedb`.`machine` (
   `hardware_arch` VARCHAR(45) NULL ,
   `hardware_vendor` VARCHAR(45) NULL ,
   `ip_addr_secondary` VARCHAR(45) NULL ,
-  `last_updated` DATETIME NULL ,
   `mac_addr` VARCHAR(45) NULL ,
   `mac_addr_2` VARCHAR(45) NULL ,
   `mac_addr_3` VARCHAR(45) NULL ,
@@ -83,6 +84,26 @@ SHOW WARNINGS;
 CREATE UNIQUE INDEX `hostname_UNIQUE` ON `machinedb`.`machine` (`hostname` ASC) ;
 
 SHOW WARNINGS;
+USE `machinedb`;
+
+DELIMITER $$
+
+USE `machinedb`$$
+DROP TRIGGER IF EXISTS `machinedb`.`machine_INSERT` $$
+SHOW WARNINGS$$
+USE `machinedb`$$
+
+
+CREATE
+DEFINER=`root`@`localhost`
+TRIGGER `machinedb`.`machine_INSERT`
+BEFORE INSERT ON `machinedb`.`machine`
+FOR EACH ROW
+SET NEW.record_created = NOW()$$
+
+SHOW WARNINGS$$
+
+DELIMITER ;
 
 grant INSERT on TABLE `machinedb`.`machine` to machinedb_dba;
 grant SELECT on TABLE `machinedb`.`machine` to machinedb_dba;

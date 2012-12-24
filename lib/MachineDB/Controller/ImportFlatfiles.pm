@@ -122,12 +122,15 @@ sub import_flatfiles {
     #my $prefix = 'machine.';
     my $prefix = '';
     my $field  = 'hostname';
+    my $printed_filename;
+    my $dumped = 0;
 
     FILE:
     foreach my $file ( @files ){
         open my $IN, '<', $file or die "Couldn't open '$file' for read: $!\n";
         my $new;
-        print $LOG "** Processing '$file' ... **\n";
+        $printed_filename = 0;
+#        print $LOG "** Processing '$file' ... **\n";
         LINE:
         while ( my $line = <$IN> ){
             next LINE if $line =~ m/^\s*$/; ## Ignore blank lines
@@ -136,36 +139,61 @@ sub import_flatfiles {
             my ( $field, $val ) = split /:/, $line;
             chomp $val if $val;
             $val =~ s/\s*//g if $val;   ## Remove whitespace
+            if ( ( $field =~ m/lastUpdated/i ) && ( $val !~ m/\d+/ ) ){
+                ## If we have a lastUpdated use it, otherwise use default
+                next LINE;
+            }
 #            print $LOG "\t** '$field': '$val' **\n";
             if ( $column_for_field{ $field } ){
                 $new->{ "$prefix$column_for_field{ $field }" } = $val;
             } else {
-                 print $LOG "*** '$field' has no entry in mapping!!! ***\n";
+                print $LOG "** '$file' ... **\n";
+                $printed_filename = 1;
+                print $LOG "*** '$field' has no entry in mapping!!! ***\n";
 #                $log->debug( "*** '$field' has no entry in mapping!!! ***" );
             }
         }
         close $IN or die "Error closing '$file' after read: $!\n";
-        #my $dumper = Data::Dumper->new( \%new );
-        #my $stuff = $dumper->dump();
-        #print $LOG $stuff;
-        #print Dumper \%new;
 
         ## alert about any files that don't have a hostname
         unless ( $new->{ "$prefix$field" } ){
-            print $LOG "*** '$file' has no hostname!!! ***\n";
+            unless ( $printed_filename = 1 ){
+                print $LOG "** '$file' ... **\n";
+                $printed_filename = 1;
+            }
+            print $LOG "'$file' has no hostname!!!\n";
 #            $log->debug( "*** '$file' has no hostname!!! ***" );
             next FILE;
         }
 
+        ## Set datetime in MySQL format:
+#        use Date::Format;
+#        my @lt = localtime(time);
+#        ## 0000-00-00 00:00:00
+#        my $template = "%Y-%m-%d %H:%M:%S";
+#        $new->{ 'record_created' } = strftime($template, @lt);
+
 #        print $LOG "Creating DB entry for '", $new->{ "$prefix$field" }, "'\n";
         ## This is dying, lets's ignore that :-)
+        if ( !$dumped ){
+            my $d = Data::Dumper->new( [$new] );
+            print $LOG $d->Dump;
+            $dumped++;
+        }
+            
         my $result;
         #my $result = $c->model( 'DB::Machine' )->create( $new );
         eval{
             $result = $c->model( 'DB::Machine' )->create( $new );
         };
         if ( $@ ){
-            print $LOG "** inserting '", $new->{ "$prefix$field" }, "' failed **:\n\t$@\n";
+            if ( $@ =~ m/DBIx::Class::ResultSet::create(): DBI Exception: DBD::mysql::st execute failed: Duplicate entry/ ){
+                next FILE;
+            }
+            unless ( $printed_filename = 1 ){
+                print $LOG "** '$file' ... **\n";
+            }
+            print $LOG "inserting '", $new->{ "$prefix$field" }, "' failed:\n\t$@\n";
 #            $log->debug( "** inserting '", $new->{ "$prefix$field" }, "' failed **:\n\t$@\n";
         }
 

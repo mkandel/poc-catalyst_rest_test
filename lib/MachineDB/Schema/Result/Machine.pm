@@ -64,6 +64,19 @@ __PACKAGE__->table("machine");
   is_nullable: 0
   size: 45
 
+=head2 record_created
+
+  data_type: 'datetime'
+  datetime_undef_if_invalid: 1
+  is_nullable: 0
+
+=head2 last_updated
+
+  data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
+  default_value: current_timestamp
+  is_nullable: 0
+
 =head2 service
 
   data_type: 'varchar'
@@ -157,12 +170,6 @@ __PACKAGE__->table("machine");
   data_type: 'varchar'
   is_nullable: 1
   size: 45
-
-=head2 last_updated
-
-  data_type: 'datetime'
-  datetime_undef_if_invalid: 1
-  is_nullable: 1
 
 =head2 mac_addr
 
@@ -398,6 +405,19 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 0, size => 45 },
   "ip_addr",
   { data_type => "varchar", is_nullable => 0, size => 45 },
+  "record_created",
+  {
+    data_type => "datetime",
+    datetime_undef_if_invalid => 1,
+    is_nullable => 0,
+  },
+  "last_updated",
+  {
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
+    default_value => \"current_timestamp",
+    is_nullable => 0,
+  },
   "service",
   { data_type => "varchar", is_nullable => 1, size => 45 },
   "product",
@@ -435,12 +455,6 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 1, size => 45 },
   "ip_addr_secondary",
   { data_type => "varchar", is_nullable => 1, size => 45 },
-  "last_updated",
-  {
-    data_type => "datetime",
-    datetime_undef_if_invalid => 1,
-    is_nullable => 1,
-  },
   "mac_addr",
   { data_type => "varchar", is_nullable => 1, size => 45 },
   "mac_addr_2",
@@ -546,8 +560,8 @@ __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("hostname_UNIQUE", ["hostname"]);
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2012-12-20 14:46:17
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:aznflDK4lIwvdRFub1c5zw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2012-12-24 14:34:20
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iVk3yC0GGk6FldUySsHA0g
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
