@@ -6,3 +6,43 @@
 13796  grep -r record_created lib/
 13802  h | grep _create
 13803  h | grep _create > docs/create_commands
+********* rh **********
+30057  ./script/machinedb_create.pl model DB DBIC::Schema MyApp::Schema create=static dbi:mysql:dbname:host.name.com 'username' 'password'
+30062  ./script/machinedb_create.pl model DB DBIC::Schema MyApp::Schema create=static dbi:mysql:dbname:mkandel-rh.ariba.com 'machinedb_dba' 'ariba4sure'
+30063  ./script/machinedb_create.pl model DB DBIC::Schema MyApp::Schema create=static dbi:mysql:dbname:mkandel-rh.ariba.com 'machinedb' 'ariba4sure'
+30064  ./script/machinedb_create.pl model DB DBIC::Schema MyApp::Schema create=static dbi:mysql:machinedb:mkandel-rh.ariba.com 'machinedb' 'ariba4sure'
+30074  ./script/machinedb_create.pl model DB DBIC::Schema MachineDB::Schema create=static dbi:mysql:machinedb:mkandel-rh.ariba.com 'machinedb' 'ariba4sure'
+30102  ./script/machinedb_create.pl -h
+30103  machinedb_create.pl view HTML TT
+30104  ./script/machinedb_create.pl view HTML TT
+30105  ./script/machinedb_create.pl controller REST
+30108  ./script/machinedb_create.pl controller REST Catalyst::Controller::REST
+30114  ./script/machinedb_create.pl controller API::REST DBIC::API::REST MachineDB::Schema MachineDB::Model::DB
+30116  h | grep machinedb_create
+30125  ./script/machinedb_create.pl -?
+30139  ./script/machinedb_create.pl controller ImportFlatfiles
+30960  h | grep machinedb_create
+30962  30064  ./script/machinedb_create.pl model DB DBIC::Schema MachineDB::Schema create=static dbi:mysql:machinedb:mkandel-rh.ariba.com 'machinedb' 'ariba4sure'
+30965  ./script/machinedb_create.pl model DB DBIC::Schema MachineDB::Schema create=static dbi:mysql:machinedb:mkandel-rh.ariba.com 'machinedb' 'ariba4sure'
+30975  h | grep machinedb_create
+30977  30064  ./script/machinedb_create.pl model DB DBIC::Schema MachineDB::Schema create=static dbi:mysql:machinedb:mkandel-rh.ariba.com 'machinedb' 'ariba4sure'
+30980  ./script/machinedb_create.pl model DB DBIC::Schema MachineDB::Schema create=static dbi:mysql:machinedb:mkandel-rh.ariba.com 'machinedb' 'ariba4sure'
+31048  h | grep _create.pl
+31051  h | grep _create.pl >> commands 
+31099  ./script/machinedb_create.pl controller API::REST DBIC::API::REST MachineDB::Schema MachineDB::Model::DB
+31146  ./script/machinedb_create.pl controller API::REST DBIC::API::REST MachineDB::Schema MachineDB::Model::DB
+31157  ./script/machinedb_create.pl controller API::REST DBIC::API::REST MachineDB::Schema MachineDB::Model::DB
+31414  h | grep _create
+31416  h | grep _create >> docs/create_commands 
+********* catalyst **********
+30054  perldoc catalyst.pl
+30101  catalyst.pl -help
+30115  h | grep catalyst.pl
+30243  catalyst.pl MachineDB
+30775  catalyst.pl 
+30776  catalyst.pl -help
+30958  h | grep catalyst.pl
+30973  h | grep catalyst.pl
+31049  h | grep catalyst.pl
+31050  h | grep catalyst.pl > commands
+31419  h | grep catalyst.pl >> docs/create_commands 
